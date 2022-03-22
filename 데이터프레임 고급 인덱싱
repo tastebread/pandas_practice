@@ -1,0 +1,72 @@
+import pandas as pd
+import numpy as np
+
+#데이터프레임 고급 인덱싱
+print("데이터프레임 고급 인덱싱\n")
+"""
+pandas는 Numpy 행렬과 같이 쉼표를 사용한 (행 인덱스, 열 인덱스) 형식의
+2차원 인덱싱을 지원하기 위해 다음과 같이 특별한 인덱서 속성도 제공한다
+
+loc : 라벨값 기반의 2차원 인덱싱
+iloc : 순서를 나타내는 정수 기반의 2차원 인덱
+
+loc 인덱스
+df.loc[행 인덱싱값] 또는 df.loc[행 인덱싱값, 열 인덱싱값]
+
+인덱싱값은 다음중 하나
+1.인덱스데이터
+2.인덱스데이터 슬라이스
+3.인덱스데이터 리스트
+4.같은 행 인덱스를 가지는 불리언 시리즈(행 인덱싱의 경우)
+5.위의 값들을 반환하는 함수
+"""
+print("데이터프레임\n")
+df = pd.DataFrame(np.arange(10,22).reshape(3,4),
+                  index=["a","b","c"],
+                  columns=["A","B","C","D"])
+print(df)
+print("\n")
+
+print("인덱싱값을 하나만 받는경우")
+#loc 인덱서를 사용하면서 인덱스를 하나만 넣으면 행(row)을 선택한다
+print(df.loc["a"])
+print("\n")
+#인덱스 슬라이스
+print("인덱스 슬라이스\n")
+print(df.loc["b":"c"])
+print("\n불리언시리즈 \n")
+print(df.A > 15)
+print("\n")
+print(df.loc[df.A > 15])
+print("\n")
+#인덱스 대신 인덱스 값을 반환하는 함수 사용 가능
+def select_rows(df):
+    return df.A > 15
+print(select_rows(df))
+print("\n")
+
+#인덱싱값을 행과 열 모두 받는 경우
+print("인덱싱값을 행과 열 모두 받는 경우")
+#인덱싱값을 행과 열 모두 받으려면 df.loc[행 인덱스, 열 인덱스]와 같은 형태로 사용
+print(df.loc["a","A"]) #행 인덱스 라벨값이 a, 열 인덱스 라벨값이 A인 위치
+print("\n")
+print(df.loc["b":, "A"]) #인덱싱값으로 라벨 데이터의 슬라이싱 또는 리스트 사용가능
+print("\n")
+print(df.loc["a", :])
+print("\n")
+print(df.loc[["a","b"],["B","D"]])
+print("\n")
+print(df.loc[df.A > 10, ["C","D"]])
+#불리언 시리즈를 반환하는 함수도 행의 인덱싱 값이 될 수 있다
+print("\n")
+#iloc 인덱서는 loc 인덱서와 반대로 라벨이 아니라 순서를 나타내는 정수 인덱스만 받음
+print("iloc 인덱서\n")
+print(df.iloc[0,1])
+print("\n")
+print(df.iloc[:2,2])
+print("\n")
+print(df.iloc[0, -2:])
+print("\n")
+print(df.iloc[2:3, 1:3])
+print("\n")
+print("loc인덱서와 마찬가지로 인덱서 하나만 들어가면 행을 선택한다\n{} ".format(df.iloc[-1]))
