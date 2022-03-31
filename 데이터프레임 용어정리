@@ -1,0 +1,24 @@
+1.df.transpose(),df.T -> 행 과 열을 바꿈
+
+2.df.loc -> 인덱스를 기준으로 행 데이터 읽기
+3.df.iloc -> 행번호를 기준으로 행 데이터 읽음
+4.df.rename({'columns' : '새로지을 columns'}, axis=1) => axis=0 행을기준, axis=1 열을기준
+5.df.fillna(0) -> 결측치를 0으로 대체 하는 메소드
+
+6.def toInt(string): #문자열을 정수로 변환 해주는 함수
+    return int(string.replace(',','')) replace -> 대체하다 ,를 ''로 대체한다
+7.df.apply('적용할함수,메소드') 적용하다
+8.df.reset_index() -> 인덱스를 리셋 시키는데 사용한다
+#기본값으로 인덱스 값들을 DataFrame의 열로 전송하며, 새로운 단순한 정수 인덱스를 셋팅
+
+df = pd.concat([df7,df], axis=1)#df 데이터프레임과 df7데이터프레임을 합친다 axi1=1 열을기준으로 실행
+왼쪽에 있는걸 맨 앞에두고 합친다
+
+#tidy data 특징
+#1.각 변수는 개별의 열(columns)으로 존재
+#2.각 관측치는 행(row)로 구상
+#3.하나이상의 표가 존재한다면 적어도 하나이상의 열(columns)이 공유되어야한다
+
+df = pd.merge(left,right, how='left', on=['key1','key2'])
+#how => 기준점을 잡는것 ( how='left' -> 왼쪽을 기준으로 잡는다)
+#on => 열,인덱스 이름 두개의 데이터프레임에서 모두 찾아야한다 on=None 상태라면 열의 교차로 설정된다
