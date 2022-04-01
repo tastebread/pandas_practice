@@ -22,3 +22,35 @@ df = pd.concat([df7,df], axis=1)#df 데이터프레임과 df7데이터프레임�
 df = pd.merge(left,right, how='left', on=['key1','key2'])
 #how => 기준점을 잡는것 ( how='left' -> 왼쪽을 기준으로 잡는다)
 #on => 열,인덱스 이름 두개의 데이터프레임에서 모두 찾아야한다 on=None 상태라면 열의 교차로 설정된다
+
+
+import pandas as pd
+
+DataUrl = 'https://raw.githubusercontent.com/Datamanim/pandas/main/Jeju.csv'
+df = pd.read_csv(DataUrl,encoding='euc-kr')
+df
+
+df.tail(3) # 뒤에서 3번째 까지 출력
+
+#수치형 변수를 가진 컬럼, 범주형 변수를 가진 컬럼 출력하기
+df.dtypes
+obj = df.select_dtypes(include=['int64','float64']).columns
+#select_dtypes 메서드 -> .select_dtypes(include = ['자료형 이름']).columns 포함하고싶은것
+                                    # exclude=['자료형 이름']).columns 포함하고싶지 않은것
+obj2 = df.select_dtypes(include=['object']).columns
+obj,obj2
+
+#각 컬럼의 결측치 숫자 파악하기
+df.isnull().sum() #.isnull() -> 결측치 갯수 파악하기, .sum() -> 파악한 결측치 갯수 더하기
+
+df.info() #각 컬럼별 데이터수, 데이터 타입 한 번에 확인
+#df.describe() ->전체 데이터 프레임 칼럼중 수치형 변수의 분포 확인해주는 메서드
+
+df.describe() # 수치형 변수의 분포(사분위,평균,표준편차,최대,최소) 확인
+df['거주인구'] #특정 칼럼의 값 확인 : df.['칼럼명']
+
+df['평균 속도'].quantile(0.75) - df['평균 속도'].quantile(0.25)
+#.quantile(값 넣기) 메서드 -> 사분위수 값 출력
+df['읍면동명'].unique() # .unique() 메서드 -> 데이터에 고유값들이 어떠한 종류들이 있는지 알고 싶을때
+df['읍면동명'].nunique() # .nunique() 메서드 -> 데이터에 고유값들의 수를 출력해주는 함수
+df['읍면동명'].unique(),  df['읍면동명'].nunique()
