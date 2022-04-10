@@ -1,0 +1,73 @@
+import pandas as pd
+import numpy as np
+
+#문제44 -> 데이터를 로드하고 상위 5개 컬럼을 출력하라
+df = pd.read_csv('https://raw.githubusercontent.com/Datamanim/pandas/main/AB_NYC_2019.csv')
+
+Ans =df.head(5)
+Ans
+
+#문제45 -> 데이터의 각 host_name의 빈도수를 구하고 host_name으로 정렬하여 상위 5개를 출력하라
+#.groupby().count() #열에서 값이 발생하는 횟수를 계산, 빈도를 계산할때 쓰는 함수
+
+df.groupby('host_name').size()
+#or
+Ans = df.host_name.value_counts().sort_index()
+Ans
+
+#문제46 ->데이터의 각 host_name의 빈도수를 구하고 빈도수 기준 내림차순 정렬한 데이터 프레임을 만들어라. 
+#빈도수 컬럼은 counts로 명명하라
+
+#to_frame() -> 주어진 시리즈를 데이터 프레임으 변환
+# rename() -> 컬럼의 이름을 변경 0-count로 변경
+#count 컬럼을 내림차순으로 변경
+df_46 = df.groupby('host_name').size().to_frame().rename(columns={0:'count'}).sort_values('count',ascending=False) 
+df_46
+
+#문제47 -> neighbourhood_group의 값에 따른 neighbourhood컬럼 값의 갯수를 구하여라
+df_47 = df.groupby(['neighbourhood_group','neighbourhood'], as_index=False).size()
+#이웃그룹 별로 이웃을 구하고 싶은경우 묶어서 사용한다
+#as_index = False -> groupby 사용시 기본으로 그룹 라벨이 Index가 되지만 사용하고싶지 않은 경우 사용
+df_47
+
+#문제48 -> neighbourhood_group의 값에 따른 neighbourhood컬럼 값 중 neighbourhood_group그룹의 
+#최댓값들을 출력하라
+df_47.groupby(['neighbourhood_group'], as_index=False).max()
+
+#문제49 -> neighbourhood_group 값에 따른 price값의 평균, 분산, 최대, 최소 값을 구하여라
+df_49 = df.groupby(['neighbourhood_group','price'], as_index=False).size()
+df_49.groupby('neighbourhood_group').agg(['mean','var','max','min'])
+
+#.agg -> 여러개의 함수를 여러 열에 적용하고 싶을때 싸용 하는 함수
+#모든열에 여러 함수를 매핑 : group객체.agg([함수1,함수2,함수3,…])
+#각 열마다 다른 함수를 매핑 : group객체.agg({‘열1’: 함수1, ‘열2’:함수2, …})
+
+#문제50 -> neighbourhood_group 값에 따른 reviews_per_month 평균, 분산, 최대, 최소 값을 구하여라
+df_50 = df.groupby(['neighbourhood_group','reviews_per_month'], as_index=False).size()
+df_50.groupby('neighbourhood_group').agg(['mean','var','max','min'])
+
+#문제51 -> neighbourhood 값과 neighbourhood_group 값에 따른 price 의 평균을 구하라
+df_51 = df.groupby(['neighbourhood','neighbourhood_group']).price.mean()
+#neighbourhood 와 neighbourhood_group 값을 가지고 price 평균을 구한다
+df_51
+
+#문제52 -> neighbourhood 값과 neighbourhood_group 값에 따른 price 의 평균을 계층적 indexing 없이 구하라
+#계층적 인덱싱은 기준축 표(pivot table)를 만드는 것과 같은 그룹형식의 연산이나 자료를 변형하는 작업과 같은 중요한 역할을 한다
+#.unstack() 메소드를 사용해서 시리즈 -> 데이터프레임으로 변형할수 있다 ,행 인덱스의 지정된 수준을 열 인덱스의 가장 안쪽 수준으로 변경하는 메소드이다.
+df_52 = df.groupby(['neighbourhood','neighbourhood_group']).price.mean().unstack()
+df_52
+
+#문제53 -> neighbourhood 값과 neighbourhood_group 값에 따른 price 의 평균을 계층적 indexing 없이 구하고 nan 값은 -999값으로 채워라
+df_53 = df.groupby(['neighbourhood','neighbourhood_group']).price.mean().unstack()
+df_53.fillna(-999).head(4) #.fillna(대체할값) -> nan을 대체할값으로 바꿔줌
+
+#문제54 -> 데이터중 neighbourhood_group 값이 Queens값을 가지는 
+#데이터들 중 neighbourhood 그룹별로 price값의 평균, 분산, 최대, 최소값을 구하라
+df_54 = df[df.neighbourhood_group == 'Queens'].groupby(['neighbourhood']).price.agg(['mean','var','max','min'])
+df_54.head(4)
+
+#문제55 -> 데이터중 neighbourhood_group 값에 따른 room_type 컬럼의 숫자를 구하고 
+#neighbourhood_group 값을 기준으로 각 값의 비율을 구하여라
+df_55 = df[['neighbourhood_group','room_type']].groupby(['neighbourhood_group','room_type']).size().unstack()
+df_55.loc[:,:] = (df_55.values / df_55.sum(axis=1).values.reshape(-1,1))
+df_55
